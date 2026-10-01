@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đối Thoại Hán Ngữ - Luyện giao tiếp HSK</title>
+    <style>
+        :root {
+            --bg-dark: #121517;
+            --card-bg: #1a1e21;
+            --card-border: #282d32;
+            --accent-green: #38bdf8;
+            --primary-mint: #2dd4bf;
+            --mint-light: #14b8a6;
+            --badge-green: #059669;
+            --badge-orange: #d97706;
+            --badge-red: #dc2626;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --pinyin-color: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar Header */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            background-color: #f97316;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 12px;
+        }
+
+        .stat-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Main Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: #181c1f;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--card-border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-mint);
+            color: #052e16;
+        }
+
+        /* Dashboard Streak Box */
+        .streak-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .streak-info {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .streak-count {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .streak-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f97316;
+        }
+
+        .streak-days {
+            display: flex;
+            gap: 10px;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .day-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px dashed #4b5563;
+        }
+
+        .dot.active {
+            background: #f97316;
+            border: none;
+        }
+
+        /* Category Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .chip {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .chip.active {
+            background: #262c30;
+            color: white;
+            border-color: #4b5563;
+        }
+
+        /* Cards Grid */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .lesson-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-mint);
+        }
+
+        .card-tags {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .tag-hsk {
+            background: #064e3b;
+            color: #a7f3d0;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .tag-hsk2 {
+            background: #78350f;
+            color: #fde68a;
+        }
+
+        .tag-category {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .card-title-zh {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .card-status {
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid #282d32;
+            padding-top: 10px;
+        }
+
+        /* Interactive Practice View */
+        .practice-container {
+            background: var(--card-bg);
+            border: 1px solid var(--primary-mint);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .practice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .zh-sentence {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .pinyin-sentence {
+            color: var(--pinyin-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            width: 100%;
+            background: #121517;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+
+        .input-box:focus {
+            border-color: var(--primary-mint);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            background: var(--primary-mint);
+            color: #042f2e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* Hide Tab Sections */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Stats Bar -->
+    <div class="header-bar">
+        <div class="brand">
+            <div class="brand-icon">话</div>
+            <div class="brand-text">
+                <h1>Đối Thoại Hán Ngữ</h1>
+                <p>Luyện giao tiếp HSK 1-6 qua hội thoại</p>
+            </div>
+        </div>
+        <div class="user-stats">
+            <div class="stat-badge" style="color: #f97316;">🔥 1</div>
+            <div class="stat-badge" style="color: #38bdf8;">⚡ 18/50</div>
+        </div>
+    </div>
+
+    <!-- Tab Menu Bar -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-hoithoai', this)">Hội thoại</button>
+        <button class="tab-btn" onclick="switchTab('tab-dichdoan', this)">Dịch đoạn</button>
+        <button class="tab-btn" onclick="switchTab('tab-trochuyen', this)">Trò chuyện</button>
+        <button class="tab-btn" onclick="switchTab('tab-ontap', this)">Ôn tập</button>
+    </div>
+
+    <!-- TAB 1: HỘI THOẠI -->
+    <div id="tab-hoithoai" class="tab-content active">
+        <!-- Streak Info -->
+        <div class="streak-card">
+            <div class="streak-info">
+                <div class="streak-count">
+                    <span class="streak-number">1</span>
+                    <span style="font-size: 12px; color: var(--text-muted);">ngày liên tiếp</span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted);">
+                    <strong>242</strong> tổng XP &nbsp;|&nbsp; <strong>3</strong> bài đã học
+                </div>
+            </div>
+            <div class="streak-days">
+                <div class="day-dot"><span>T6</span><div class="dot"></div></div>
+                <div class="day-dot"><span>T7</span><div class="dot"></div></div>
+                <div class="day-dot"><span>CN</span><div class="dot active"></div></div>
+                <div class="day-dot"><span>T2</span><div class="dot active"></div></div>
+                <div class="day-dot"><span>T3</span><div class="dot active"></div></div>
+                <div class="day-dot"><span>T4</span><div class="dot"></div></div>
+                <div class="day-dot"><span>Nay</span><div class="dot active"></div></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Hội thoại luyện dịch</h2>
+        <div class="filter-chips">
+            <button class="chip active">Tất cả</button>
+            <button class="chip">HSK 1</button>
+            <button class="chip">HSK 2</button>
+            <button class="chip">HSK 3</button>
+            <button class="chip">HSK 4</button>
+            <button class="chip">HSK 5</button>
+        </div>
+
+        <div class="cards-grid">
+            <div class="lesson-card" onclick="openPractice()">
+                <div class="card-tags">
+                    <span class="tag-hsk">HSK 1</span>
+                    <span class="tag-category">Chào hỏi</span>
+                </div>
+                <div class="card-title-zh">很高兴认识你</div>
+                <div class="card-desc">Nice to meet you · 8 câu</div>
+                <div class="card-status">Chưa học</div>
+            </div>
+
+            <div class="lesson-card">
+                <div class="card-tags">
+                    <span class="tag-hsk">HSK 1</span>
+                    <span class="tag-category">Ăn uống</span>
+                </div>
+                <div class="card-title-zh">在饭馆</div>
+                <div class="card-desc">At the restaurant · 8 câu</div>
+                <div class="card-status">Chưa học</div>
+            </div>
+
+            <div class="lesson-card">
+                <div class="card-tags">
+                    <span class="tag-hsk tag-hsk2">HSK 2</span>
+                    <span class="tag-category">Mua sắm</span>
+                </div>
+                <div class="card-title-zh">买衣服</div>
+                <div class="card-desc">Buying clothes · 8 câu</div>
+                <div class="card-status" style="color: var(--primary-mint);">Cao nhất 50%</div>
+            </div>
+        </div>
+
+        <!-- Khung luyện tập từng câu (Interactive Demo) -->
+        <div class="practice-container" id="practice-box" style="display:none;">
+            <div class="practice-header">
+                <span>Câu 1/8</span>
+                <span style="color: #f59e0b;">0 điểm</span>
+            </div>
+            <div style="font-size: 12px; color: var(--primary-mint); margin-bottom: 8px;">小明 nói:</div>
+            <div class="zh-sentence">你好！我叫小明。你叫什么名字？</div>
+            <div class="pinyin-sentence">Nǐ hǎo! Wǒ jiào Xiǎo Míng. Nǐ jiào shénme míngzi?</div>
+
+            <input type="text" class="input-box" placeholder="Dịch câu trên sang tiếng Việt..." id="user-ans">
+            <div class="action-btns">
+                <button class="btn-submit" onclick="checkAnswer()">Kiểm tra</button>
+                <button class="btn-secondary" onclick="alert('Đáp án: Xin chào! Tôi tên là Tiểu Minh. Bạn tên là gì?')">Xem đáp án</button>
+            </div>
+            <div id="feedback" style="margin-top: 10px; font-weight: bold;"></div>
+        </div>
+    </div>
+
+    <!-- TAB 2: DỊCH ĐOẠN -->
+    <div id="tab-dichdoan" class="tab-content">
+        <h2 class="section-title">Dịch cả đoạn văn sang tiếng Trung</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+            Chọn truyện đời thường hoặc ngụ ngôn, thành ngữ. Viết bản dịch tiếng Trung của bạn để nhận điểm.
+        </p>
+        <div class="cards-grid">
+            <div class="lesson-card">
+                <div class="card-tags"><span class="tag-hsk">HSK 1</span><span class="tag-category">10 câu</span></div>
+                <div class="card-title-zh">我的一天</div>
+                <div class="card-desc">Một ngày của tôi · My day</div>
+                <div class="card-status">Điểm cao nhất: 52/100</div>
+            </div>
+            <div class="lesson-card">
+                <div class="card-tags"><span class="tag-hsk tag-hsk2">HSK 2</span><span class="tag-category">10 câu</span></div>
+                <div class="card-title-zh">守株待兔</div>
+                <div class="card-desc">Ôm cây đợi thỏ · Thành ngữ Trung Quốc</div>
+                <div class="card-status">Điểm cao nhất: 45/100</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: TRÒ CHUYỆN -->
+    <div id="tab-trochuyen" class="tab-content">
+        <h2 class="section-title">Trò chuyện 1:1 luyện phản xạ</h2>
+        <div class="cards-grid">
+            <div class="lesson-card">
+                <div class="card-title-zh">聊天</div>
+                <div class="card-desc">Nói chuyện tự do về cuộc sống hàng ngày</div>
+            </div>
+            <div class="lesson-card">
+                <div class="card-title-zh">在饭馆点菜</div>
+                <div class="card-desc">Gọi món tại nhà hàng</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: ÔN TẬP -->
+    <div id="tab-ontap" class="tab-content">
+        <h2 class="section-title">Lịch sử bài đã học</h2>
+        <div style="background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--card-border);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 16px; font-weight: bold;">守株待兔 (Ôm cây đợi thỏ)</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Dịch đoạn · HSK 2</div>
+                </div>
+                <div style="color: #ef4444; font-weight: bold;">45/100</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // Practice box logic
+        function openPractice() {
+            document.getElementById('practice-box').style.display = 'block';
+            document.getElementById('practice-box').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function checkAnswer() {
+            const ans = document.getElementById('user-ans').value.trim().toLowerCase();
+            const feedback = document.getElementById('feedback');
+            if (ans.includes('chào') && ans.includes('minh')) {
+                feedback.style.color = '#2dd4bf';
+                feedback.innerText = ' chính xác! +10 XP';
+            } else {
+                feedback.style.color = '#ef4444';
+                feedback.innerText = '❌ Chưa chính xác, hãy thử lại hoặc bấm Xem đáp án.';
+            }
+        }
+    </script>
+</body>
+</html>
